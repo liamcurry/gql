@@ -1,19 +1,37 @@
-import * as Bluebird from 'bluebird'
-import * as _ from 'lodash'
-import * as fs from 'fs'
-import * as path from 'path'
-import * as glob from 'glob'
-import {
-  parse,
-  visit,
-  print
-} from 'graphql/language'
-import {
-  formatString
-} from 'gql-format'
+#!/usr/bin/env node
+import {promisify} from 'bluebird'
+import {readFile, writeFile} from 'fs'
+import glob from 'glob'
+import program from 'commander'
+import {parse,visit,print} from 'graphql/language'
+import {formatString} from 'gql-format'
+import {version, description} from '../package.json'
 
-const readFileAsync = Bluebird.promisify(fs.readFile)
-const globAsync = Bluebird.promisify(glob)
+const readFileAsync = promisify(readFile)
+const writeFileAsync = promisify(writeFile)
+const globAsync = promisify(glob)
+
+if (!module.parent) {
+  cli()
+}
+
+export async function cli() {
+  program
+    .version(version)
+    .description(description)
+    .usage('[options] <glob>')
+    .option('-o, --out-file <path>', 'Output GraphQL file, otherwise use stdout')
+    .option('-v, --verbose', 'Enable verbose logging')
+
+  program.parse(process.argv)
+  const schemaStr = await mergeGlob(glob)
+  const outFile = program.outFile
+  if (outFile) {
+    await writeFileAsync(outFile, schemaStr)
+  } else {
+    process.stdout.write(schemaStr)
+  }
+}
 
 export async function mergeGlob(inputGlob: string): Promise<string> {
   const filePaths: string[] = await globAsync(inputGlob)
@@ -21,7 +39,7 @@ export async function mergeGlob(inputGlob: string): Promise<string> {
 }
 
 export async function mergeFilePaths(filePaths: string[]): Promise<string> {
-  const fileReads: Bluebird<Buffer>[] = filePaths.map(file => readFileAsync(file))
+  const fileReads = filePaths.map(file => readFileAsync(file))
   const schemaBufs: Buffer[] = await Promise.all(fileReads)
   const schemaStrs: string[] = schemaBufs.map(s => s.toString())
   return mergeStrings(schemaStrs)
@@ -42,7 +60,7 @@ export function mergeAst(schemaAst: Document): string {
 
   const editedAst: Document = visit(schemaAst, {
     enter(node) {
-      const nodeName = _.get(node, 'name.value')
+      const nodeName = node.name ? node.name.value : null
       if (!nodeName || !node.kind.endsWith('TypeDefinition')) {
         return
       }
@@ -66,9 +84,9 @@ export function mergeAst(schemaAst: Document): string {
     }
   })
 
-  const fullSchemaStr = formatString(`${print(editedAst)}
+  const remainingNodesStr = print(editedAst)
+  const typeDefsStr = Object.values(typeDefs).map(print).join('\n')
+  const fullSchemaStr = `${remainingNodesStr}\n\n${typeDefsStr}`
 
-${_.values(typeDefs).map(print).join('\n')}`)
-
-  return fullSchemaStr
+  return formatString(fullSchemaStr)
 }
