@@ -1,7 +1,7 @@
 # gql-merge
 
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-[![npm](https://img.shields.io/npm/v/gql-merge.svg)](https://www.npmjs.com/package/gql-merge)
+[![npm](https://img.shields.io/npm/v/gql-merge.svg?style=flat-square)](https://www.npmjs.com/package/gql-merge)
 
 > Tools for merging GraphQL documents
 
@@ -13,13 +13,13 @@
 
 ## Installation
 
-```sh
-$ npm i standard-readme
+```
+$ npm i gql-merge
 ```
 
 ## CLI
 
-```sh
+```
 $ gql-merge -h
 
   Usage: gql-merge [options] <glob>
@@ -37,4 +37,14 @@ $ gql-merge -h
 
 ## API
 
-Docs coming soon.
+More detailed docs coming soon.
+
+### `mergeGlob`
+
+### `mergeFilePaths`
+
+### `mergeStrings`
+
+### `mergeString`
+
+### `mergeAst`
