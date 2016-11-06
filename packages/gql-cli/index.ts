@@ -1,26 +1,26 @@
 #!/usr/bin/env node
+import * as fs from 'fs'
 import * as program from 'commander'
 import {formatGlob} from 'gql-format'
 import {mergeGlob} from 'gql-merge'
 import {version} from './package.json'
 
-program.version(version)
+program
+  .version(version)
+  .description('Tools for working with GraphQL files')
 
 program
   .command('merge <glob>')
   .description('Merge multiple GraphQL files into one')
   .option('-o, --out <path>', 'Output GraphQL file')
   .option('-v, --verbose', 'Enable verbose logging')
-  .action((glob, options) => {
-    mergeGlob(glob)
-      .then(schemaStr => {
-        console.log(schemaStr)
-        // todo: write to a file
-      })
-      .catch(err => {
-        console.error(err)
-        process.exit(1)
-      })
+  .action(async (glob, options) => {
+    const schemaStr = await mergeGlob(glob)
+    if (options.out) {
+      fs.writeFileSync(options.out, schemaStr)
+    } else {
+      process.stdout.write(schemaStr)
+    }
   })
 
 program
