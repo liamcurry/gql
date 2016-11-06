@@ -1,0 +1,24 @@
+type Hello {
+  foo: String
+}
+
+type Query {
+  bar: String
+}
+
+type Mutation {
+  changeFoo(input: String): String
+}
+
+enum Lang {
+  DE
+  FR
+}
+
+interface Test {
+  foo: String
+}
+
+input TestInput {
+  baz: String
+}
