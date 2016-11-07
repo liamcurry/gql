@@ -31,7 +31,7 @@ type Query {
 }
 ```
 
-```
+```graphql
 type Author {
   id: ID!
   name: String
@@ -45,7 +45,12 @@ type Query {
 You can use the `gql-merge` CLI to combine these files into one:
 
 ```
-$ gql-merge testdata/readme*
+$ gql-merge --out-file schema.graphql testdata/readme*
+```
+
+The resulting file would look like this:
+
+```graphql
 type Post {
   id: ID!
   content: String
