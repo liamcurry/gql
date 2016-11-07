@@ -22,6 +22,11 @@ var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
+/**
+ * Find GraphQL files based on a glob pattern and merge the results.
+ * @param {string} fileGlob - A glob pattern to find files, e.g. '*.graphql'
+ * @return {Promise<string>} A promise of the resulting string.
+ */
 var mergeFileGlob = exports.mergeFileGlob = function () {
   var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(fileGlob) {
     var fileDetails, fileContents;
@@ -51,6 +56,13 @@ var mergeFileGlob = exports.mergeFileGlob = function () {
     return _ref.apply(this, arguments);
   };
 }();
+
+/**
+ * Find GraphQL files based on a glob pattern and merge the results.
+ * @param {string} fileGlob - A glob pattern to find files, e.g. '*.graphql'
+ * @return {Promise<string>} A promise of the resulting string.
+ */
+
 
 var mergeFilePaths = exports.mergeFilePaths = function () {
   var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(filePaths) {
@@ -82,16 +94,24 @@ var mergeFilePaths = exports.mergeFilePaths = function () {
   };
 }();
 
+/**
+ * Merges an array of GraphQL strings into one
+ * @param {string[]} schemaStrs - An array of GraphQL strings.
+ * @return {string} The resulting merged GraphQL string.
+ */
+
+
 var cli = exports.cli = function () {
-  var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
+  var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4() {
+    var _this = this;
+
     var program = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _commander2.default;
-    var command;
-    return _regenerator2.default.wrap(function _callee3$(_context3) {
+    return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
             if (module.parent) {
-              _context3.next = 8;
+              _context4.next = 8;
               break;
             }
 
@@ -100,25 +120,46 @@ var cli = exports.cli = function () {
             cliAddHelp(cliAddBasics(program));
 
             program.parse(process.argv);
-            _context3.next = 6;
+            _context4.next = 6;
             return cliAction(program, program.args, program);
 
           case 6:
-            _context3.next = 11;
+            _context4.next = 9;
             break;
 
           case 8:
-            command = program.command('merge <glob ...>');
+            (function () {
+              var command = program.command('merge <glob ...>');
+              cliAddHelp(cliAddBasics(command));
+              command.action(function () {
+                var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(inputGlob, options) {
+                  return _regenerator2.default.wrap(function _callee3$(_context3) {
+                    while (1) {
+                      switch (_context3.prev = _context3.next) {
+                        case 0:
+                          _context3.next = 2;
+                          return cliAction(command, inputGlob.split(' '), options);
 
-            cliAddHelp(cliAddBasics(command));
-            command.action(cliAction.bind(null, program));
+                        case 2:
+                        case 'end':
+                          return _context3.stop();
+                      }
+                    }
+                  }, _callee3, _this);
+                }));
 
-          case 11:
+                return function (_x5, _x6) {
+                  return _ref4.apply(this, arguments);
+                };
+              }());
+            })();
+
+          case 9:
           case 'end':
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee4, this);
   }));
 
   return function cli(_x3) {
@@ -127,44 +168,44 @@ var cli = exports.cli = function () {
 }();
 
 var cliAction = exports.cliAction = function () {
-  var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(program) {
+  var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(program) {
     var fileGlobs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-    var _ref5 = arguments[2];
-    var outFile = _ref5.outFile;
+    var _ref6 = arguments[2];
+    var outFile = _ref6.outFile;
     var mergeGlobsPromises, schemaStrs, schemaStr;
-    return _regenerator2.default.wrap(function _callee4$(_context4) {
+    return _regenerator2.default.wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
             if (fileGlobs.length) {
-              _context4.next = 2;
+              _context5.next = 2;
               break;
             }
 
-            return _context4.abrupt('return', program.help());
+            return _context5.abrupt('return', program.help());
 
           case 2:
             mergeGlobsPromises = fileGlobs.map(mergeFileGlob);
-            _context4.next = 5;
+            _context5.next = 5;
             return _promise2.default.all(mergeGlobsPromises);
 
           case 5:
-            schemaStrs = _context4.sent;
+            schemaStrs = _context5.sent;
             schemaStr = mergeStrings(schemaStrs);
 
             if (!outFile) {
-              _context4.next = 12;
+              _context5.next = 12;
               break;
             }
 
-            _context4.next = 10;
+            _context5.next = 10;
             return (0, _gqlUtils.writeFileObject)({
               filePath: outFile,
               fileContents: schemaStr
             });
 
           case 10:
-            _context4.next = 13;
+            _context5.next = 13;
             break;
 
           case 12:
@@ -172,14 +213,14 @@ var cliAction = exports.cliAction = function () {
 
           case 13:
           case 'end':
-            return _context4.stop();
+            return _context5.stop();
         }
       }
-    }, _callee4, this);
+    }, _callee5, this);
   }));
 
-  return function cliAction(_x5, _x6, _x7) {
-    return _ref4.apply(this, arguments);
+  return function cliAction(_x7, _x8, _x9) {
+    return _ref5.apply(this, arguments);
   };
 }();
 
@@ -213,11 +254,21 @@ function mergeStrings(schemaStrs) {
   return mergeString(schemaStr);
 }
 
+/**
+ * Merges duplicate definitions in a single GraphQL string
+ * @param {string} schemaStr - The GraphQL String.
+ * @return {string} The resulting merged GraphQL string.
+ */
 function mergeString(schemaStr) {
   var schemaAst = (0, _language.parse)(schemaStr);
   return mergeAst(schemaAst);
 }
 
+/**
+ * Merges duplicate definitions in a single GraphQL abstract-syntax tree
+ * @param {Document} schemaAst - The GraphQL AST.
+ * @return {string} The resulting merged GraphQL string.
+ */
 function mergeAst(schemaAst) {
   var typeDefs = {};
 
@@ -261,7 +312,7 @@ function cliAddBasics(command) {
 function cliAddHelp(command) {
   var commandName = !module.parent ? 'gql-merge' : 'gql merge';
   return command.on('--help', function () {
-    return console.log('  Examples:\n\n    $ ' + commandName + ' **/*.graphql > schema.graphql\n    $ ' + commandName + ' -o schema.graphql **/*.graphql\n    $ ' + commandName + ' dir1/*.graphql dir2/*.graphql > schema.graphql\n  ');
+    return console.log('  Examples:\n    $ ' + commandName + ' **/*.graphql > schema.graphql\n    $ ' + commandName + ' -o schema.graphql **/*.graphql\n    $ ' + commandName + ' dir1/*.graphql dir2/*.graphql > schema.graphql\n  ');
   });
 }
 

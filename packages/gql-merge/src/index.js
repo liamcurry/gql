@@ -14,28 +14,53 @@ export default {
   mergeAst,
 }
 
+/**
+ * Find GraphQL files based on a glob pattern and merge the results.
+ * @param {string} fileGlob - A glob pattern to find files, e.g. '*.graphql'
+ * @return {Promise<string>} A promise of the resulting string.
+ */
 export async function mergeFileGlob(fileGlob: string): Promise<string> {
   const fileDetails = await readFileGlob(fileGlob)
   const fileContents = fileDetails.map(f => f.fileContents)
   return mergeStrings(fileContents)
 }
 
+/**
+ * Find GraphQL files based on a glob pattern and merge the results.
+ * @param {string} fileGlob - A glob pattern to find files, e.g. '*.graphql'
+ * @return {Promise<string>} A promise of the resulting string.
+ */
 export async function mergeFilePaths(filePaths: string[]): Promise<string> {
   const fileDetails = await readFilePaths(filePaths)
   const fileContents = fileDetails.map(f => f.fileContents)
   return mergeStrings(fileContents)
 }
 
+/**
+ * Merges an array of GraphQL strings into one
+ * @param {string[]} schemaStrs - An array of GraphQL strings.
+ * @return {string} The resulting merged GraphQL string.
+ */
 export function mergeStrings(schemaStrs: string[]): string {
   const schemaStr: string = schemaStrs.join('\n\n')
   return mergeString(schemaStr)
 }
 
+/**
+ * Merges duplicate definitions in a single GraphQL string
+ * @param {string} schemaStr - The GraphQL String.
+ * @return {string} The resulting merged GraphQL string.
+ */
 export function mergeString(schemaStr: string): string {
   const schemaAst: Document = parse(schemaStr)
   return mergeAst(schemaAst)
 }
 
+/**
+ * Merges duplicate definitions in a single GraphQL abstract-syntax tree
+ * @param {Document} schemaAst - The GraphQL AST.
+ * @return {string} The resulting merged GraphQL string.
+ */
 export function mergeAst(schemaAst: Document): string {
   const typeDefs = {}
 
@@ -85,7 +110,9 @@ export async function cli(program=commander) {
   } else {
     const command = program.command('merge <glob ...>')
     cliAddHelp(cliAddBasics(command))
-    command.action(cliAction.bind(null, program))
+    command.action(async (inputGlob, options) => {
+      await cliAction(command, inputGlob.split(' '), options)
+    })
   }
 }
 
@@ -101,7 +128,6 @@ function cliAddHelp(command) {
       ? 'gql-merge'
       : 'gql merge'
   return command.on('--help', () => console.log(`  Examples:
-
     $ ${commandName} **/*.graphql > schema.graphql
     $ ${commandName} -o schema.graphql **/*.graphql
     $ ${commandName} dir1/*.graphql dir2/*.graphql > schema.graphql

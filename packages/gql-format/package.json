@@ -1,6 +1,6 @@
 {
   "name": "gql-format",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Tools for formatting GraphQL documents",
   "main": "dist/index.js",
   "bin": {

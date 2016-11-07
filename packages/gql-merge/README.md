@@ -35,6 +35,12 @@ $ gql-merge -h
     -o, --out-file <path>  Output GraphQL file, otherwise use stdout
     -v, --verbose          Enable verbose logging
 
+  Examples:
+
+    $ gql-merge **/*.graphql > schema.graphql
+    $ gql-merge -o schema.graphql **/*.graphql
+    $ gql-merge dir1/*.graphql dir2/*.graphql > schema.graphql
+
 ```
 
 ## API
