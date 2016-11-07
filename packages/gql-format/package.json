@@ -1,7 +1,7 @@
 {
   "name": "gql-format",
-  "version": "0.0.1",
-  "description": "Auto-format GraphQL documents",
+  "version": "0.0.2",
+  "description": "Tools for formatting GraphQL documents",
   "main": "dist/index.js",
   "bin": {
     "gql-format": "dist/index.js"

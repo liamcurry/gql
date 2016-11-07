@@ -18,18 +18,18 @@ var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var readFileGlob = exports.readFileGlob = function () {
-  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(inputGlob) {
+  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(fileGlob) {
     var filePaths;
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return globAsync(inputGlob);
+            return globAsync(fileGlob);
 
           case 2:
             filePaths = _context.sent;
-            return _context.abrupt('return', readFilePaths(filePaths, fn));
+            return _context.abrupt('return', readFilePaths(filePaths));
 
           case 4:
           case 'end':
@@ -152,6 +152,10 @@ var writeFileObject = exports.writeFileObject = function () {
   };
 }();
 
+var _glob = require('glob');
+
+var _glob2 = _interopRequireDefault(_glob);
+
 var _bluebird = require('bluebird');
 
 var _fs = require('fs');
@@ -159,8 +163,9 @@ var _fs = require('fs');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var readFileAsync = (0, _bluebird.promisify)(_fs.readFile);
+
 var writeFileAsync = (0, _bluebird.promisify)(_fs.writeFile);
-var globAsync = (0, _bluebird.promisify)(glob);
+var globAsync = (0, _bluebird.promisify)(_glob2.default);
 
 exports.default = {
   readFileGlob: readFileGlob,

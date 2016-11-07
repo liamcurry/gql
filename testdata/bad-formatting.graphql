@@ -1,21 +1,16 @@
 type Hello {
-          foo: String
+  foo: String
 }
 
 type Query {
-
-
-
-
-
-
   bar: String
 }
 
 type Mutation {
-    changeFoo(input: String): String
+  changeFoo(input: String): String
 }
 
-enum Lang {  DE
+enum Lang {
+  DE
   FR
 }

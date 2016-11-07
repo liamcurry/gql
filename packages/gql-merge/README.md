@@ -16,7 +16,7 @@
 ## Installation
 
 ```
-$ npm i gql-merge
+$ npm i -g gql-merge
 ```
 
 ## CLI
@@ -24,7 +24,7 @@ $ npm i gql-merge
 ```
 $ gql-merge -h
 
-  Usage: gql-merge [options] <glob>
+  Usage: gql-merge [options] <glob ...>
 
   Tools for merging GraphQL documents
 
@@ -35,13 +35,19 @@ $ gql-merge -h
     -o, --out-file <path>  Output GraphQL file, otherwise use stdout
     -v, --verbose          Enable verbose logging
 
+  Examples:
+
+    $ gql-merge **/*.graphql > schema.graphql
+    $ gql-merge -o schema.graphql **/*.graphql
+    $ gql-merge dir1/*.graphql dir2/*.graphql > schema.graphql
+
 ```
 
 ## API
 
 More detailed docs coming soon.
 
-### `mergeGlob`
+### `mergeFileGlob`
 
 ### `mergeFilePaths`
 

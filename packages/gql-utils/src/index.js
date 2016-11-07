@@ -1,7 +1,7 @@
 /* @flow */
+import glob from 'glob'
 import {promisify} from 'bluebird'
 import {readFile, writeFile} from 'fs'
-import glob from 'glob'
 
 const readFileAsync = promisify(readFile)
 const writeFileAsync = promisify(writeFile)

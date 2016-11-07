@@ -101,7 +101,7 @@ export async function cli() {
         fileContents: schemaStr,
       })
     } else {
-      process.stdout.write(schemaStr)
+      console.log(schemaStr)
     }
   } else {
     program.help()

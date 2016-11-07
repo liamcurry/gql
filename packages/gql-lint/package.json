@@ -1,6 +1,6 @@
 {
   "name": "gql-lint",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Lint GraphQL documents for errors",
   "main": "index.js",
   "scripts": {

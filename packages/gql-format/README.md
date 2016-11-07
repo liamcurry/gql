@@ -5,7 +5,7 @@
 [![npm](https://img.shields.io/npm/dm/gql-format.svg?style=flat-square)](https://www.npmjs.com/package/gql-format)
 [![npm](https://img.shields.io/npm/l/gql-format.svg?style=flat-square)](https://www.npmjs.com/package/gql-format)
 
-> Tools for merging GraphQL documents
+> Tools for formatting GraphQL documents
 
 ## Table of Contents
 
@@ -26,14 +26,12 @@ $ gql-format -h
 
   Usage: gql-format [options] <glob>
 
-  Tools for merging GraphQL documents
+  Tools for formatting GraphQL documents
 
   Options:
 
-    -h, --help             output usage information
-    -V, --version          output the version number
-    -o, --out-file <path>  Output GraphQL file, otherwise use stdout
-    -v, --verbose          Enable verbose logging
+    -h, --help     output usage information
+    -V, --version  output the version number
 
 ```
 
@@ -41,7 +39,7 @@ $ gql-format -h
 
 More detailed docs coming soon.
 
-### `formatGlob`
+### `formatFileGlob`
 
 ### `formatFilePaths`
 
