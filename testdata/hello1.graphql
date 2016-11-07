@@ -1,9 +1,9 @@
 type Hello {
-  foo: String
+  hello: String
 }
 
 type Query {
-  bar: String
+  foo: String
 }
 
 type Mutation {
@@ -13,12 +13,4 @@ type Mutation {
 enum Lang {
   DE
   FR
-}
-
-interface Test {
-  foo: String
-}
-
-input TestInput {
-  baz: String
 }

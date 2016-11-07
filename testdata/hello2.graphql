@@ -3,14 +3,14 @@ type Hello {
 }
 
 type Query {
-  greetings: String
+  bar: String
 }
 
 type Mutation {
-  changeGreetings(input: String): String
+  changeFoo(input: String): String
 }
 
 enum Lang {
-  EN
-  ES
+  DE
+  FR
 }
