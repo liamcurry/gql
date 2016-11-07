@@ -50,7 +50,7 @@ Package | Description | Version | Dependencies
 
 Feel free to dive in! [Open an issue](/liamcurry/gql/issues/new) or submit PRs.
 
-Standard Readme follows the [Contributor Covenant Code of Conduct](http://contributor-covenant.org/version/1/3/0/).
+`gql` follows the [Contributor Covenant Code of Conduct](http://contributor-covenant.org/version/1/3/0/).
 
 ## License
 
