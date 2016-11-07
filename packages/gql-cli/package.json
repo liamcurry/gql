@@ -1,7 +1,7 @@
 {
   "name": "gql-cli",
   "version": "0.0.2",
-  "description": "",
+  "description": "Command-line interface for gql GraphQL tools",
   "main": "dist/index.js",
   "bin": {
     "gql": "./dist/index.js"

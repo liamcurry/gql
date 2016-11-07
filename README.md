@@ -1,9 +1,7 @@
 # gql
 
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-[![npm](https://img.shields.io/npm/v/gql.svg?style=flat-square)](https://www.npmjs.com/package/gql)
-[![npm](https://img.shields.io/npm/dm/gql.svg?style=flat-square)](https://www.npmjs.com/package/gql)
-[![npm](https://img.shields.io/npm/l/gql.svg?style=flat-square)](https://www.npmjs.com/package/gql)
+[![Travis](https://img.shields.io/travis/liamcurry/gql.svg?style=flat-square)]()
 
 > Tools for working with GraphQL documents
 
@@ -11,27 +9,22 @@
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [CLI](#cli)
-- [API](#api)
+- [Getting Started](#getting-started)
+- [Packages](#packages)
 
-## CLI
+## Getting Started
 
-```
-$ npm u -g gql
-$ gql -h
-
-  Usage: gql [options] [command]
-
-
-  Commands:
-
-    merge [options] <glob>   Merge multiple GraphQL files into one
-    format [options] <glob>  Formats GraphQL files
-
-  Options:
-
-    -h, --help     output usage information
-    -V, --version  output the version number
+You can globally install the `gql` command-line interface to quickly get started:
 
 ```
+$ npm i -g gql-cli
+```
+
+## Packages
+
+Package | Description | Version | Dependencies
+------- | ----------- | ------- | ------------
+[`gql-cli`](https://www.npmjs.com/package/gql-format) | Command-line interface for gql GraphQL tools | [![npm](https://img.shields.io/npm/v/gql-cli.svg?style=flat-square)](https://www.npmjs.com/package/gql-cli) |[![Dependency Status](https://david-dm.org/liamcurry/gql.svg?path=packages/gql-cli)](https://david-dm.org/liamcurry/gql?path=packages/gql-cli)
+[`gql-format`](https://www.npmjs.com/package/gql-format) | Tools for formatting GraphQL documents | [![npm](https://img.shields.io/npm/v/gql-format.svg?style=flat-square)](https://www.npmjs.com/package/gql-format) |[![Dependency Status](https://david-dm.org/liamcurry/gql.svg?path=packages/gql-format)](https://david-dm.org/liamcurry/gql?path=packages/gql-format)
+[`gql-merge`](https://www.npmjs.com/package/gql-merge) | Tools for merging GraphQL documents | [![npm](https://img.shields.io/npm/v/gql-merge.svg?style=flat-square)](https://www.npmjs.com/package/gql-merge) |[![Dependency Status](https://david-dm.org/liamcurry/gql.svg?path=packages/gql-merge)](https://david-dm.org/liamcurry/gql?path=packages/gql-merge)
+[`gql-lint`](https://www.npmjs.com/package/gql-lint) | Tools for linting GraphQL documents | [![npm](https://img.shields.io/npm/v/gql-lint.svg?style=flat-square)](https://www.npmjs.com/package/gql-lint) |[![Dependency Status](https://david-dm.org/liamcurry/gql.svg?path=packages/gql-lint)](https://david-dm.org/liamcurry/gql?path=packages/gql-lint)
