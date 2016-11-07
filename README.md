@@ -20,10 +20,10 @@
 Building GraphQL schemas in the GraphQL native language (i.e. `.graphql` files)
 has several benefits over using a programming language:
 
-- Your data structures are language agnostic -- only the resolvers need to be
+- Your data structures are language agnostic so only the resolvers need to be
 programmed.
 - The GraphQL language is terser than most programming languages.
-- Schemas rarely change after compile time -- most people won't take advantage
+- Schemas rarely change after compile time; most people won't take advantage
 of progammatic schemas.
 - Schemas can be accessed without a GraphQL server.
 
