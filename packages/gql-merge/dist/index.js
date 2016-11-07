@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cli = exports.mergeFilePaths = exports.mergeFileGlob = undefined;
+exports.cliAction = exports.cli = exports.mergeFilePaths = exports.mergeFileGlob = undefined;
 
 var _promise = require('babel-runtime/core-js/promise');
 
@@ -84,56 +84,36 @@ var mergeFilePaths = exports.mergeFilePaths = function () {
 
 var cli = exports.cli = function () {
   var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
-    var fileGlobs, mergeGlobsPromises, schemaStrs, schemaStr, outFile;
+    var program = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _commander2.default;
+    var command;
     return _regenerator2.default.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _commander2.default.version(_package.version).description(_package.description).usage('[options] <glob ...>').option('-o, --out-file <path>', 'Output GraphQL file, otherwise use stdout').option('-v, --verbose', 'Enable verbose logging').on('--help', function () {
-              console.log('  Examples:\n\n    $ gql-merge **/*.graphql > schema.graphql\n    $ gql-merge -o schema.graphql **/*.graphql\n    $ gql-merge dir1/*.graphql dir2/*.graphql > schema.graphql\n');
-            }).parse(process.argv);
-
-            if (!_commander2.default.args.length) {
-              _context3.next = 17;
+            if (module.parent) {
+              _context3.next = 8;
               break;
             }
 
-            fileGlobs = _commander2.default.args;
-            mergeGlobsPromises = fileGlobs.map(mergeFileGlob);
+            program.version(_package.version).usage('[options] <glob ...>');
+
+            cliAddHelp(cliAddBasics(program));
+
+            program.parse(process.argv);
             _context3.next = 6;
-            return _promise2.default.all(mergeGlobsPromises);
+            return cliAction(program, program.args, program);
 
           case 6:
-            schemaStrs = _context3.sent;
-            schemaStr = mergeStrings(schemaStrs);
-            outFile = _commander2.default.outFile;
-
-            if (!outFile) {
-              _context3.next = 14;
-              break;
-            }
-
-            _context3.next = 12;
-            return (0, _gqlUtils.writeFileObject)({
-              filePath: outFile,
-              fileContents: schemaStr
-            });
-
-          case 12:
-            _context3.next = 15;
+            _context3.next = 11;
             break;
 
-          case 14:
-            process.stdout.write(schemaStr);
+          case 8:
+            command = program.command('merge <glob ...>');
 
-          case 15:
-            _context3.next = 18;
-            break;
+            cliAddHelp(cliAddBasics(command));
+            command.action(cliAction.bind(null, program));
 
-          case 17:
-            _commander2.default.help();
-
-          case 18:
+          case 11:
           case 'end':
             return _context3.stop();
         }
@@ -141,8 +121,65 @@ var cli = exports.cli = function () {
     }, _callee3, this);
   }));
 
-  return function cli() {
+  return function cli(_x3) {
     return _ref3.apply(this, arguments);
+  };
+}();
+
+var cliAction = exports.cliAction = function () {
+  var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(program) {
+    var fileGlobs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+    var _ref5 = arguments[2];
+    var outFile = _ref5.outFile;
+    var mergeGlobsPromises, schemaStrs, schemaStr;
+    return _regenerator2.default.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            if (fileGlobs.length) {
+              _context4.next = 2;
+              break;
+            }
+
+            return _context4.abrupt('return', program.help());
+
+          case 2:
+            mergeGlobsPromises = fileGlobs.map(mergeFileGlob);
+            _context4.next = 5;
+            return _promise2.default.all(mergeGlobsPromises);
+
+          case 5:
+            schemaStrs = _context4.sent;
+            schemaStr = mergeStrings(schemaStrs);
+
+            if (!outFile) {
+              _context4.next = 12;
+              break;
+            }
+
+            _context4.next = 10;
+            return (0, _gqlUtils.writeFileObject)({
+              filePath: outFile,
+              fileContents: schemaStr
+            });
+
+          case 10:
+            _context4.next = 13;
+            break;
+
+          case 12:
+            console.log(schemaStr);
+
+          case 13:
+          case 'end':
+            return _context4.stop();
+        }
+      }
+    }, _callee4, this);
+  }));
+
+  return function cliAction(_x5, _x6, _x7) {
+    return _ref4.apply(this, arguments);
   };
 }();
 
@@ -215,6 +252,17 @@ function mergeAst(schemaAst) {
   var fullSchemaStr = remainingNodesStr + '\n\n' + typeDefsStr;
 
   return (0, _gqlFormat.formatString)(fullSchemaStr);
+}
+
+function cliAddBasics(command) {
+  return command.description(_package.description).option('-o, --out-file <path>', 'Output GraphQL file, otherwise use stdout');
+}
+
+function cliAddHelp(command) {
+  var commandName = !module.parent ? 'gql-merge' : 'gql merge';
+  return command.on('--help', function () {
+    return console.log('  Examples:\n\n    $ ' + commandName + ' **/*.graphql > schema.graphql\n    $ ' + commandName + ' -o schema.graphql **/*.graphql\n    $ ' + commandName + ' dir1/*.graphql dir2/*.graphql > schema.graphql\n  ');
+  });
 }
 
 if (!module.parent) {

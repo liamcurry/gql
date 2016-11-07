@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* @flow */
-import program from 'commander'
+import commander from 'commander'
 import {parse,visit,print,} from 'graphql/language'
 import {formatString,} from 'gql-format'
 import {readFileGlob, readFilePaths, writeFileObject,} from 'gql-utils'
@@ -72,41 +72,59 @@ export function mergeAst(schemaAst: Document): string {
   return formatString(fullSchemaStr)
 }
 
-export async function cli() {
-  program
-    .version(version)
-    .description(description)
-    .usage('[options] <glob ...>')
-    .option('-o, --out-file <path>', 'Output GraphQL file, otherwise use stdout')
-    .option('-v, --verbose', 'Enable verbose logging')
-    .on('--help', function() {
-      console.log(`  Examples:
+export async function cli(program=commander) {
+  if (!module.parent) {
+    program
+      .version(version)
+      .usage('[options] <glob ...>')
 
-    $ gql-merge **/*.graphql > schema.graphql
-    $ gql-merge -o schema.graphql **/*.graphql
-    $ gql-merge dir1/*.graphql dir2/*.graphql > schema.graphql
-`)
-    })
-    .parse(process.argv)
-  if (program.args.length) {
-    const fileGlobs = program.args
-    const mergeGlobsPromises = fileGlobs.map(mergeFileGlob)
-    const schemaStrs = await Promise.all(mergeGlobsPromises)
-    const schemaStr = mergeStrings(schemaStrs)
+    cliAddHelp(cliAddBasics(program))
 
-    const outFile = program.outFile
-    if (outFile) {
-      await writeFileObject({
-        filePath: outFile,
-        fileContents: schemaStr,
-      })
-    } else {
-      console.log(schemaStr)
-    }
+    program.parse(process.argv)
+    await cliAction(program, program.args, program)
   } else {
-    program.help()
+    const command = program.command('merge <glob ...>')
+    cliAddHelp(cliAddBasics(command))
+    command.action(cliAction.bind(null, program))
+  }
+}
+
+function cliAddBasics(command) {
+  return command
+    .description(description)
+    .option('-o, --out-file <path>', 'Output GraphQL file, otherwise use stdout')
+}
+
+function cliAddHelp(command) {
+  const commandName =
+    !module.parent
+      ? 'gql-merge'
+      : 'gql merge'
+  return command.on('--help', () => console.log(`  Examples:
+
+    $ ${commandName} **/*.graphql > schema.graphql
+    $ ${commandName} -o schema.graphql **/*.graphql
+    $ ${commandName} dir1/*.graphql dir2/*.graphql > schema.graphql
+  `))
+}
+
+export async function cliAction(program, fileGlobs=[], {outFile}) {
+  if (!fileGlobs.length) {
+    return program.help()
   }
 
+  const mergeGlobsPromises = fileGlobs.map(mergeFileGlob)
+  const schemaStrs = await Promise.all(mergeGlobsPromises)
+  const schemaStr = mergeStrings(schemaStrs)
+
+  if (outFile) {
+    await writeFileObject({
+      filePath: outFile,
+      fileContents: schemaStr,
+    })
+  } else {
+    console.log(schemaStr)
+  }
 }
 
 if (!module.parent) {

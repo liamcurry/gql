@@ -26,12 +26,14 @@ $ gql-format -h
 
   Usage: gql-format [options] <glob>
 
-  Tools for formatting GraphQL documents
+  Tools for merging GraphQL documents
 
   Options:
 
-    -h, --help     output usage information
-    -V, --version  output the version number
+    -h, --help             output usage information
+    -V, --version          output the version number
+    -o, --out-file <path>  Output GraphQL file, otherwise use stdout
+    -v, --verbose          Enable verbose logging
 
 ```
 

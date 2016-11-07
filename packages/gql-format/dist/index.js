@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cli = exports.formatFileObjects = exports.formatFilePaths = exports.formatFileGlob = undefined;
+exports.cliAction = exports.cli = exports.formatFileObjects = exports.formatFilePaths = exports.formatFileGlob = undefined;
 
 var _promise = require('babel-runtime/core-js/promise');
 
@@ -116,30 +116,38 @@ var formatFileObjects = exports.formatFileObjects = function () {
 
 var cli = exports.cli = function () {
   var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4() {
-    var inputGlobs, formatFilePromises;
+    var program = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _commander2.default;
     return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            _commander2.default.version(_package.version).description(_package.description).usage('[options] <glob>').parse(process.argv);
-
-            if (!_commander2.default.args.length) {
-              _context4.next = 9;
+            if (module.parent) {
+              _context4.next = 8;
               break;
             }
 
-            inputGlobs = _commander2.default.args;
-            formatFilePromises = inputGlobs.map(formatFileGlob);
+            program.version(_package.version).usage('[options] <glob ...>');
+
+            cliAddHelp(cliAddBasics(program));
+
+            program.parse(process.argv);
             _context4.next = 6;
-            return _promise2.default.all(formatFilePromises);
+            return cliAction(program, program.args);
 
           case 6:
-            return _context4.abrupt('return', _context4.sent);
+            _context4.next = 9;
+            break;
+
+          case 8:
+            (function () {
+              var command = program.command('format <glob ...>');
+              cliAddHelp(cliAddBasics(command));
+              command.action(function (inputGlob, options) {
+                cliAction(command, inputGlob.split(' '));
+              });
+            })();
 
           case 9:
-            _commander2.default.help();
-
-          case 10:
           case 'end':
             return _context4.stop();
         }
@@ -147,8 +155,45 @@ var cli = exports.cli = function () {
     }, _callee4, this);
   }));
 
-  return function cli() {
+  return function cli(_x4) {
     return _ref5.apply(this, arguments);
+  };
+}();
+
+var cliAction = exports.cliAction = function () {
+  var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(program) {
+    var fileGlobs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+    var formatFilePromises;
+    return _regenerator2.default.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            if (fileGlobs.length) {
+              _context5.next = 2;
+              break;
+            }
+
+            return _context5.abrupt('return', program.help());
+
+          case 2:
+            console.log;
+            formatFilePromises = fileGlobs.map(formatFileGlob);
+            _context5.next = 6;
+            return _promise2.default.all(formatFilePromises);
+
+          case 6:
+            return _context5.abrupt('return', _context5.sent);
+
+          case 7:
+          case 'end':
+            return _context5.stop();
+        }
+      }
+    }, _callee5, this);
+  }));
+
+  return function cliAction(_x6, _x7) {
+    return _ref6.apply(this, arguments);
   };
 }();
 
@@ -169,6 +214,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function formatString(schemaStr) {
   var schemaAst = (0, _language.parse)(schemaStr);
   return (0, _language.print)(schemaAst);
+}
+
+function cliAddBasics(command) {
+  return command.description(_package.description);
+}
+
+function cliAddHelp(command) {
+  var commandName = !module.parent ? 'gql-format' : 'gql format';
+  return command.on('--help', function () {
+    return console.log('  Examples:\n\n    $ ' + commandName + ' **/*.graphql\n    $ ' + commandName + ' dir1/*.graphql dir2/*.graphql\n  ');
+  });
 }
 
 if (!module.parent) {
