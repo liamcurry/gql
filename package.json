@@ -1,34 +1,55 @@
 {
   "name": "gql",
   "version": "0.0.1",
-  "description": "> Tools for working with GraphQL documents",
-  "main": "index.js",
+  "description": "Tools for working with GraphQL documents",
+  "main": "packages/gql-cli/index.js",
   "bin": {
-    "gql": "gql-merge.js"
+    "gql": "packages/gql-cli/dist/index.js",
+    "gql-merge": "packages/gql-merge/dist/index.js"
   },
-  "dependencies": {
-    "ava": "^0.16.0",
-    "bluebird": "^3.4.6",
-    "commander": "^2.9.0",
-    "glob": "^7.1.1",
-    "graphql": "^0.7.2",
-    "lodash": "^4.16.6",
-    "typescript": "^2.0.7"
+  "babel": {
+    "presets": [
+      "latest",
+      "stage-0"
+    ],
+    "plugins": [
+      "transform-runtime",
+      "transform-flow-strip-types"
+    ]
+  },
+  "ava": {
+    "require": "babel-register",
+    "babel": "inherit"
   },
   "devDependencies": {
+    "ava": "^0.16.0",
+    "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.0",
+    "babel-plugin-transform-flow-strip-types": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "eslint": "^3.9.1",
+    "flow-bin": "^0.34.0",
     "lerna": "2.0.0-beta.30"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "lerna exec -- babel --out-dir dist src",
+    "publish": "lerna publish",
+    "flow": "flow check",
+    "lint": "lerna exec -- eslint --ignore-path ../../.gitignore --config ../../.eslint.json 'src/**/*.js' 'test/**/*.js'",
+    "test": "lerna exec -- ava",
+    "watch-build": "npm run build -- -w",
+    "watch-test": "npm run test -- -w"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liamcurry/graphql-merge.git"
+    "url": "git+https://github.com/liamcurry/gql.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/liamcurry/graphql-merge/issues"
+    "url": "https://github.com/liamcurry/gql/issues"
   },
-  "homepage": "https://github.com/liamcurry/graphql-merge#readme"
+  "homepage": "https://github.com/liamcurry/gql#readme"
 }

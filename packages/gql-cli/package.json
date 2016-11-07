@@ -2,9 +2,9 @@
   "name": "gql-cli",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "bin": {
-    "gql": "./index.js"
+    "gql": "./dist/index.js"
   },
   "directories": {
     "test": "test"

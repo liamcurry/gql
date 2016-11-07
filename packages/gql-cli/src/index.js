@@ -1,9 +1,10 @@
 #!/usr/bin/env node
+/* @flow */
 import * as fs from 'fs'
 import * as program from 'commander'
-import {formatGlob} from 'gql-format'
-import {mergeGlob} from 'gql-merge'
-import {version} from './package.json'
+import {cli as format} from 'gql-format'
+import {cli as merge} from 'gql-merge'
+import {version} from '../package.json'
 
 program
   .version(version)

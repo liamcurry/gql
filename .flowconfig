@@ -1,0 +1,10 @@
+[ignore]
+.*/packages/.*/lib
+.*/packages/.*/test
+
+[include]
+packages/*/src
+
+[libs]
+
+[options]

@@ -6,45 +6,17 @@
   "bin": {
     "gql-merge": "dist/index.js"
   },
-  "babel": {
-    "presets": [
-      "latest",
-      "stage-0"
-    ],
-    "plugins": [
-      "transform-runtime",
-      "transform-flow-strip-types"
-    ]
-  },
-  "ava": {
-    "require": "babel-register",
-    "babel": "inherit"
-  },
-  "scripts": {
-    "build": "babel --out-dir dist src",
-    "watch": "npm run build -- -w",
-    "test": "ava"
-  },
   "repository": "https://github.com/liamcurry/gql/tree/master/packages/gql-merge",
-  "author": "",
-  "license": "ISC",
+  "author": "Liam Curry <liam@curry.name>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/liamcurry/gql/issues"
   },
   "homepage": "https://github.com/liamcurry/gql/tree/master/packages/gql-merge#readme",
-  "devDependencies": {
-    "ava": "^0.16.0",
-    "babel-cli": "^6.18.0",
-    "babel-plugin-transform-flow-strip-types": "^6.18.0",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-latest": "^6.16.0",
-    "babel-preset-stage-0": "^6.16.0",
-    "flow-bin": "^0.34.0"
-  },
   "dependencies": {
-    "bluebird": "^3.4.6",
     "commander": "^2.9.0",
-    "glob": "^7.1.1",
+    "gql-format": "latest",
+    "gql-utils": "latest",
     "graphql": "^0.7.2"
   }
 }

@@ -2,6 +2,8 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 [![npm](https://img.shields.io/npm/v/gql-merge.svg?style=flat-square)](https://www.npmjs.com/package/gql-merge)
+[![npm](https://img.shields.io/npm/dm/gql-merge.svg?style=flat-square)](https://www.npmjs.com/package/gql-merge)
+[![npm](https://img.shields.io/npm/l/gql-merge.svg?style=flat-square)](https://www.npmjs.com/package/gql-merge)
 
 > Tools for merging GraphQL documents
 

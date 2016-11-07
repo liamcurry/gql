@@ -1,1 +1,4 @@
 node_modules
+*-debug.log
+.DS_Store
+conflicted copy

@@ -1,9 +1,8 @@
 import test from 'ava'
 import {formatString} from 'gql-format'
 import {
-  mergeGlob,
   mergeString,
-  mergeStrings
+  mergeStrings,
 } from '../dist'
 
 // test('mergeGlob', async t => {

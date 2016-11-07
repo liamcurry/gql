@@ -1,18 +1,20 @@
 {
   "name": "gql-format",
   "version": "0.0.1",
-  "description": "Auto-format GraphQL files and strings",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Auto-format GraphQL documents",
+  "main": "dist/index.js",
+  "bin": {
+    "gql-format": "dist/index.js"
   },
-  "author": "Liam Curry",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/graphql": "^0.7.2",
-    "typescript": "^2.0.7"
+  "repository": "https://github.com/liamcurry/gql/tree/master/packages/gql-format",
+  "author": "Liam Curry <liam@curry.name>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liamcurry/gql/issues"
   },
+  "homepage": "https://github.com/liamcurry/gql/tree/master/packages/gql-format#readme",
   "dependencies": {
+    "commander": "^2.9.0",
     "graphql": "^0.7.2"
   }
 }

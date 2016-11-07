@@ -1,48 +1,29 @@
 #!/usr/bin/env node
-import {promisify} from 'bluebird'
-import {readFile, writeFile} from 'fs'
-import glob from 'glob'
+/* @flow */
 import program from 'commander'
-import {parse,visit,print} from 'graphql/language'
-import {formatString} from 'gql-format'
-import {version, description} from '../package.json'
+import {parse,visit,print,} from 'graphql/language'
+import {formatString,} from 'gql-format'
+import {readFileGlob, readFilePaths, writeFileObject,} from 'gql-utils'
+import {version, description,} from '../package.json'
 
-const readFileAsync = promisify(readFile)
-const writeFileAsync = promisify(writeFile)
-const globAsync = promisify(glob)
-
-if (!module.parent) {
-  cli()
+export default {
+  mergeFileGlob,
+  mergeFilePaths,
+  mergeStrings,
+  mergeString,
+  mergeAst,
 }
 
-export async function cli() {
-  program
-    .version(version)
-    .description(description)
-    .usage('[options] <glob>')
-    .option('-o, --out-file <path>', 'Output GraphQL file, otherwise use stdout')
-    .option('-v, --verbose', 'Enable verbose logging')
-
-  program.parse(process.argv)
-  const schemaStr = await mergeGlob(glob)
-  const outFile = program.outFile
-  if (outFile) {
-    await writeFileAsync(outFile, schemaStr)
-  } else {
-    process.stdout.write(schemaStr)
-  }
-}
-
-export async function mergeGlob(inputGlob: string): Promise<string> {
-  const filePaths: string[] = await globAsync(inputGlob)
-  return mergeFilePaths(filePaths)
+export async function mergeFileGlob(fileGlob: string): Promise<string> {
+  const fileDetails = await readFileGlob(fileGlob)
+  const fileContents = fileDetails.map(f => f.fileContents)
+  return mergeStrings(fileContents)
 }
 
 export async function mergeFilePaths(filePaths: string[]): Promise<string> {
-  const fileReads = filePaths.map(file => readFileAsync(file))
-  const schemaBufs: Buffer[] = await Promise.all(fileReads)
-  const schemaStrs: string[] = schemaBufs.map(s => s.toString())
-  return mergeStrings(schemaStrs)
+  const fileDetails = await readFilePaths(filePaths)
+  const fileContents = fileDetails.map(f => f.fileContents)
+  return mergeStrings(fileContents)
 }
 
 export function mergeStrings(schemaStrs: string[]): string {
@@ -89,4 +70,45 @@ export function mergeAst(schemaAst: Document): string {
   const fullSchemaStr = `${remainingNodesStr}\n\n${typeDefsStr}`
 
   return formatString(fullSchemaStr)
+}
+
+export async function cli() {
+  program
+    .version(version)
+    .description(description)
+    .usage('[options] <glob ...>')
+    .option('-o, --out-file <path>', 'Output GraphQL file, otherwise use stdout')
+    .option('-v, --verbose', 'Enable verbose logging')
+    .on('--help', function() {
+      console.log(`  Examples:
+
+    $ gql-merge **/*.graphql > schema.graphql
+    $ gql-merge -o schema.graphql **/*.graphql
+    $ gql-merge dir1/*.graphql dir2/*.graphql > schema.graphql
+`)
+    })
+    .parse(process.argv)
+  if (program.args.length) {
+    const fileGlobs = program.args
+    const mergeGlobsPromises = fileGlobs.map(mergeFileGlob)
+    const schemaStrs = await Promise.all(mergeGlobsPromises)
+    const schemaStr = mergeStrings(schemaStrs)
+
+    const outFile = program.outFile
+    if (outFile) {
+      await writeFileObject({
+        filePath: outFile,
+        fileContents: schemaStr,
+      })
+    } else {
+      process.stdout.write(schemaStr)
+    }
+  } else {
+    program.help()
+  }
+
+}
+
+if (!module.parent) {
+  cli()
 }
