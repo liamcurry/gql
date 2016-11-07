@@ -15,7 +15,7 @@
 ## Install
 
 ```
-$ npm i -g gql-format
+$ npm i -g gql-cli
 ```
 
 ## CLI
