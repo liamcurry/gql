@@ -1,6 +1,6 @@
 {
   "name": "gql-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Command-line interface for gql GraphQL tools",
   "main": "dist/index.js",
   "bin": {
@@ -13,8 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.9.0",
-    "gql-format": "0.0.2",
+    "gql-format": "^0.0.3",
     "gql-lint": "0.0.2",
-    "gql-merge": "0.0.2"
+    "gql-merge": "^0.0.3"
   }
 }
