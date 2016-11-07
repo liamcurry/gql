@@ -9,9 +9,58 @@
 
 ## Table of Contents
 
+- [Background](#background)
 - [Installation](#installation)
 - [CLI](#cli)
 - [API](#api)
+
+## Background
+
+
+This repo contains tools for merging definitions into multiple GraphQL documents
+into one. For example, say you have these two files GraphQL files:
+
+```graphql
+type Post {
+  id: ID!
+  content: String
+}
+
+type Query {
+  postById(id: ID!): Post
+}
+```
+
+```
+type Author {
+  id: ID!
+  name: String
+}
+
+type Query {
+  postsByAuthorId(id: ID!): [Post]
+}
+```
+
+You can use the `gql-merge` CLI to combine these files into one:
+
+```
+$ gql-merge testdata/readme*
+type Post {
+  id: ID!
+  content: String
+}
+
+type Query {
+  postById(id: ID!): Post
+  postsByAuthorId(id: ID!): [Post]
+}
+
+type Author {
+  id: ID!
+  name: String
+}
+```
 
 ## Installation
 
