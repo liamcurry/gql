@@ -12,9 +12,6 @@
 - [Background](#background)
 - [Install](#getting-started)
     - [Packages](#packages)
-- [Usage](#usage)
-    - [CLI](#cli)
-    - [API](#api)
 - [Contribute](#contribute)
 - [License](#license)
 
