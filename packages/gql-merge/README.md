@@ -99,6 +99,19 @@ $ gql-merge -h
 
 ## API
 
+You can also import the package. The following example merges all files living in the `data/types` folder.
+
+```
+import fs from 'fs';
+import path from 'path';
+import { mergeStrings } from 'gql-merge';
+
+const typesDir = path.resolve(__dirname, 'data/types');
+const typeFiles = fs.readdirSync(typesDir);
+const types = typeFiles.map(file => fs.readFileSync(path.join(typesDir, file), 'utf-8'));
+const typeDefs = mergeStrings(types);
+```
+
 More detailed docs coming soon.
 
 ### `mergeFileGlob`
