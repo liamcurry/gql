@@ -32,8 +32,9 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "build": "lerna exec -- babel --out-dir dist src",
+    "build": "lerna exec -- babel --out-dir dist src && chmod +x packages/**/dist/index.js",
     "publish": "lerna publish",
+    "postinstall": "lerna bootstrap",
     "flow": "flow check",
     "lint": "lerna exec -- eslint --ignore-path ../../.gitignore --config ../../.eslint.json 'src/**/*.js' 'test/**/*.js'",
     "test": "lerna exec -- ava",

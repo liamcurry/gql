@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* @flow */
 import commander from 'commander'
-import {parse,visit,print,} from 'graphql/language'
-import {formatString,} from 'gql-format'
+import {parse,visit,} from 'graphql/language'
+import {formatString, formatAst} from 'gql-format'
 import {readFileGlob, readFilePaths, writeFileObject,} from 'gql-utils'
 import {version, description,} from '../package.json'
 
@@ -62,25 +62,30 @@ export function mergeString(schemaStr: string): string {
  * @return {string} The resulting merged GraphQL string.
  */
 export function mergeAst(schemaAst: Document): string {
-  const typeDefs = {}
+  const typeDefs = {};
 
+  // Go through the AST and extract/merge type definitions.
   const editedAst: Document = visit(schemaAst, {
     enter(node) {
       const nodeName = node.name ? node.name.value : null
+
+      // Don't transform TypeDefinitions directly
       if (!nodeName || !node.kind.endsWith('TypeDefinition')) {
         return
       }
 
       const oldNode = typeDefs[nodeName]
+
       if (!oldNode) {
+        // First time seeing this type so just store the value.
         typeDefs[nodeName] = node
         return null
       }
 
-      const concatProps = ['fields', 'values']
-
+      // This type is defined multiple times, so merge the fields and values.
+      const concatProps = ['fields', 'values', 'types']
       concatProps.forEach(propName => {
-        if (node[propName]) {
+        if (node[propName] && oldNode[propName]) {
           node[propName] = oldNode[propName].concat(node[propName])
         }
       })
@@ -90,8 +95,8 @@ export function mergeAst(schemaAst: Document): string {
     }
   })
 
-  const remainingNodesStr = print(editedAst)
-  const typeDefsStr = Object.values(typeDefs).map(print).join('\n')
+  const remainingNodesStr = formatAst(editedAst)
+  const typeDefsStr = Object.values(typeDefs).map(formatAst).join('\n')
   const fullSchemaStr = `${remainingNodesStr}\n\n${typeDefsStr}`
 
   return formatString(fullSchemaStr)

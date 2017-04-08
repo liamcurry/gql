@@ -1,6 +1,6 @@
 {
   "name": "gql-merge",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Tools for merging GraphQL documents",
   "main": "dist/index.js",
   "bin": {
@@ -12,11 +12,17 @@
   "bugs": {
     "url": "https://github.com/liamcurry/gql/issues"
   },
+  "scripts": {
+    "test": "ava"
+  },
   "homepage": "https://github.com/liamcurry/gql/tree/master/packages/gql-merge#readme",
   "dependencies": {
     "commander": "^2.9.0",
-    "gql-format": "^0.0.4",
+    "gql-format": "^0.0.5",
     "gql-utils": "^0.0.2",
-    "graphql": "^0.7.2"
+    "graphql": "0.9.2"
+  },
+  "devDependencies": {
+    "ava": "^0.19.0"
   }
 }

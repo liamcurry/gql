@@ -106,6 +106,7 @@ var cli = exports.cli = function () {
     var _this = this;
 
     var program = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _commander2.default;
+    var command;
     return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
@@ -124,37 +125,36 @@ var cli = exports.cli = function () {
             return cliAction(program, program.args, program);
 
           case 6:
-            _context4.next = 9;
+            _context4.next = 11;
             break;
 
           case 8:
-            (function () {
-              var command = program.command('merge <glob ...>');
-              cliAddHelp(cliAddBasics(command));
-              command.action(function () {
-                var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(inputGlob, options) {
-                  return _regenerator2.default.wrap(function _callee3$(_context3) {
-                    while (1) {
-                      switch (_context3.prev = _context3.next) {
-                        case 0:
-                          _context3.next = 2;
-                          return cliAction(command, inputGlob.split(' '), options);
+            command = program.command('merge <glob ...>');
 
-                        case 2:
-                        case 'end':
-                          return _context3.stop();
-                      }
+            cliAddHelp(cliAddBasics(command));
+            command.action(function () {
+              var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(inputGlob, options) {
+                return _regenerator2.default.wrap(function _callee3$(_context3) {
+                  while (1) {
+                    switch (_context3.prev = _context3.next) {
+                      case 0:
+                        _context3.next = 2;
+                        return cliAction(command, inputGlob.split(' '), options);
+
+                      case 2:
+                      case 'end':
+                        return _context3.stop();
                     }
-                  }, _callee3, _this);
-                }));
+                  }
+                }, _callee3, _this);
+              }));
 
-                return function (_x5, _x6) {
-                  return _ref4.apply(this, arguments);
-                };
-              }());
-            })();
+              return function (_x4, _x5) {
+                return _ref4.apply(this, arguments);
+              };
+            }());
 
-          case 9:
+          case 11:
           case 'end':
             return _context4.stop();
         }
@@ -162,7 +162,7 @@ var cli = exports.cli = function () {
     }, _callee4, this);
   }));
 
-  return function cli(_x3) {
+  return function cli() {
     return _ref3.apply(this, arguments);
   };
 }();
@@ -219,7 +219,7 @@ var cliAction = exports.cliAction = function () {
     }, _callee5, this);
   }));
 
-  return function cliAction(_x7, _x8, _x9) {
+  return function cliAction(_x6) {
     return _ref5.apply(this, arguments);
   };
 }();
@@ -272,23 +272,28 @@ function mergeString(schemaStr) {
 function mergeAst(schemaAst) {
   var typeDefs = {};
 
+  // Go through the AST and extract/merge type definitions.
   var editedAst = (0, _language.visit)(schemaAst, {
     enter: function enter(node) {
       var nodeName = node.name ? node.name.value : null;
+
+      // Don't transform TypeDefinitions directly
       if (!nodeName || !node.kind.endsWith('TypeDefinition')) {
         return;
       }
 
       var oldNode = typeDefs[nodeName];
+
       if (!oldNode) {
+        // First time seeing this type so just store the value.
         typeDefs[nodeName] = node;
         return null;
       }
 
-      var concatProps = ['fields', 'values'];
-
+      // This type is defined multiple times, so merge the fields and values.
+      var concatProps = ['fields', 'values', 'types'];
       concatProps.forEach(function (propName) {
-        if (node[propName]) {
+        if (node[propName] && oldNode[propName]) {
           node[propName] = oldNode[propName].concat(node[propName]);
         }
       });
@@ -298,8 +303,8 @@ function mergeAst(schemaAst) {
     }
   });
 
-  var remainingNodesStr = (0, _language.print)(editedAst);
-  var typeDefsStr = (0, _values2.default)(typeDefs).map(_language.print).join('\n');
+  var remainingNodesStr = (0, _gqlFormat.formatAst)(editedAst);
+  var typeDefsStr = (0, _values2.default)(typeDefs).map(_gqlFormat.formatAst).join('\n');
   var fullSchemaStr = remainingNodesStr + '\n\n' + typeDefsStr;
 
   return (0, _gqlFormat.formatString)(fullSchemaStr);

@@ -1,8 +1,0 @@
-type Author {
-  id: ID!
-  name: String
-}
-
-type Query {
-  postsByAuthorId(id: ID!): [Post]
-}

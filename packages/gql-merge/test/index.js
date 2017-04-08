@@ -53,3 +53,78 @@ type Query {
 }`)
   t.is(result, expected)
 })
+
+
+test('commentDescriptions', async t => {
+  const schema1 = `
+# This should have a comment description
+type ThingWithDesc {
+  # Bar is a string
+  bar: String
+}`
+
+  const schema2 = `
+# This should have a comment description
+type ThingWithDesc {
+  # Foo is an int
+  foo: Int
+}`
+
+  const result = await mergeStrings([schema1, schema2])
+  const expected = formatString(`
+# This should have a comment description
+type ThingWithDesc {
+  # Bar is a string
+  bar: String
+  # Foo is an int
+  foo: Int
+}`)
+  t.is(result, expected)
+})
+
+
+test('enums', async t => {
+  const schema1 = `
+# This should have a comment description
+enum Thing {
+  # Thing1 is a thing
+  Thing1
+}`
+
+  const schema2 = `
+# This should have a comment description
+enum Thing {
+  # Thing2 is a thing
+  Thing2
+}`
+
+  const result = await mergeStrings([schema1, schema2])
+  const expected = formatString(`
+# This should have a comment description
+enum Thing {
+  # Thing1 is a thing
+  Thing1
+  # Thing2 is a thing
+  Thing2
+}`)
+  t.is(result, expected)
+})
+
+
+test('unions', async t => {
+  const schema1 = `
+# This should have a comment description
+union Thing
+    = Thing1`
+
+  const schema2 = `
+# This should have a comment description
+union Thing
+    = Thing2`
+
+  const result = await mergeStrings([schema1, schema2])
+  const expected = formatString(`
+# This should have a comment description
+union Thing = Thing1 | Thing2`)
+  t.is(result, expected)
+})
